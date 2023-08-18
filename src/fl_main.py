@@ -98,7 +98,6 @@ def main():
             model_g = model_to_device(model_g, False, args.device)
 
         print('federated global round: {}, task_id: {}'.format(ep_g, task_id))
-        print(f'numclass:{numclass}')
 
         w_local = []
         clients_index = random.sample(range(num_clients), args.local_clients)
