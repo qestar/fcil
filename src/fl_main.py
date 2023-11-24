@@ -1,12 +1,6 @@
 from GLFC import GLFC_model
 from ResNet import resnet18_cbam
-import torch
-import copy
-import random
 import os.path as osp
-import os
-from myNetwork import network, LeNet
-from Fed_utils import * 
 from ProxyServer import * 
 from mini_imagenet import *
 from tiny_imagenet import *
