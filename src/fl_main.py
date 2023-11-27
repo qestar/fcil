@@ -96,8 +96,7 @@ def main():
         w_local = []
         clients_index = random.sample(range(num_clients), args.local_clients)
         print('select part of clients to conduct local training')
-        print(clients_index)
-
+        
         for c in clients_index:
             local_model, proto_grad = local_train(models, c, model_g, task_id, model_old, ep_g, old_client_0)
             w_local.append(local_model)
