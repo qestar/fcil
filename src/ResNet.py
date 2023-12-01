@@ -55,9 +55,6 @@ class SpatialAttention(nn.Module):
         max_out, _ = torch.max(x, dim=1, keepdim=True)
         x = torch.cat([avg_out, max_out], dim=1)
         x = self.conv1(x)
-        print("sdsdfsdfsdf")
-        print(self.sigmoid(x).size())
-        print("sdsdfsdfsdf")
         return self.sigmoid(x)
 
 
@@ -104,6 +101,7 @@ class BasicBlock(nn.Module):
 
         self.ca = ChannelAttention(planes)
         self.sa = SpatialAttention()
+        self.ema = EMA(planes)
 
         self.downsample = downsample
         self.stride = stride
@@ -117,6 +115,8 @@ class BasicBlock(nn.Module):
 
         out = self.conv2(out)
         out = self.bn2(out)
+
+        out = self.ema(out) * out
 
         if self.downsample is not None:
             residual = self.downsample(x)
@@ -235,6 +235,7 @@ def resnet18_cbam(pretrained=False, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
     model = ResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
+    print()
     if pretrained:
         pretrained_state_dict = model_zoo.load_url(model_urls['resnet18'])
         now_state_dict        = model.state_dict()
