@@ -12,6 +12,7 @@ from iCIFAR100 import iCIFAR100
 from torch.utils.data import DataLoader
 import random
 from Fed_utils import *
+from aux_loss import DecorrelateLossClass
 
 
 def get_one_hot(target, num_class, device):
@@ -61,6 +62,8 @@ class GLFC_model:
         self.task_id_old = -1
         self.device = device
         self.last_entropy = 0
+        # 使用CWD
+        self.aux_loss = DecorrelateLossClass(reject_threshold=1, ddp=False)
 
     # get incremental train data
     def beforeTrain(self, task_id_new, group):
@@ -190,12 +193,13 @@ class GLFC_model:
 
     def _compute_loss(self, indexs, imgs, label):
         output = self.model(imgs)
-
         target = get_one_hot(label, self.numclass, self.device)
         output, target = output.cuda(self.device), target.cuda(self.device)
         if self.old_model == None:
+
             w = self.efficient_old_class_weight(output, label)
             loss_cur = torch.mean(w * F.binary_cross_entropy_with_logits(output, target, reduction='none'))
+
 
             return loss_cur
         else:

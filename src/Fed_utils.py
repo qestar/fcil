@@ -40,6 +40,7 @@ def participant_exemplar_storing(clients, num, model_g, old_client, task_id, cli
 def local_train(clients, index, model_g, task_id, model_old, ep_g, old_client):
     clients[index].model = copy.deepcopy(model_g)
 
+    # 用户为不接受新数据
     if index in old_client:
         clients[index].beforeTrain(task_id, 0)
     else:
