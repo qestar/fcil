@@ -12,7 +12,6 @@ from iCIFAR100 import iCIFAR100
 from torch.utils.data import DataLoader
 import random
 from Fed_utils import *
-from aux_loss import DecorrelateLossClass
 
 
 def get_one_hot(target, num_class, device):
@@ -37,6 +36,7 @@ class GLFC_model:
         self.epochs = epochs
         self.learning_rate = learning_rate
         self.model = network(numclass, feature_extractor)
+        self.isTrain = False
         self.encode_model = encode_model
 
         self.exemplar_set = []
@@ -62,8 +62,6 @@ class GLFC_model:
         self.task_id_old = -1
         self.device = device
         self.last_entropy = 0
-        # 使用CWD
-        self.aux_loss = DecorrelateLossClass(reject_threshold=1, ddp=False)
 
     # get incremental train data
     def beforeTrain(self, task_id_new, group):
@@ -117,6 +115,7 @@ class GLFC_model:
     # train model
     def train(self, ep_g, model_old):
         self.model = model_to_device(self.model, False, self.device)
+        self.isTrain = True
         opt = optim.SGD(self.model.parameters(), lr=self.learning_rate, weight_decay=0.00001)
 
         if model_old[1] != None:

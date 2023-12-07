@@ -101,7 +101,7 @@ class BasicBlock(nn.Module):
 
         self.ca = ChannelAttention(planes)
         self.sa = SpatialAttention()
-        self.ema = EMA(planes)
+        # self.ema = EMA(planes)
 
         self.downsample = downsample
         self.stride = stride
@@ -116,7 +116,7 @@ class BasicBlock(nn.Module):
         out = self.conv2(out)
         out = self.bn2(out)
 
-        out = self.ema(out) * out
+        # out = self.ema(out) * out
 
         if self.downsample is not None:
             residual = self.downsample(x)
