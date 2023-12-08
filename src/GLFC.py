@@ -1,3 +1,5 @@
+import logging
+
 import torch.nn as nn
 import torch
 from torchvision import transforms
@@ -12,6 +14,7 @@ from iCIFAR100 import iCIFAR100
 from torch.utils.data import DataLoader
 import random
 from Fed_utils import *
+from src.ALA import ALA
 
 
 def get_one_hot(target, num_class, device):
@@ -62,6 +65,8 @@ class GLFC_model:
         self.task_id_old = -1
         self.device = device
         self.last_entropy = 0
+        self.loss = nn.CrossEntropyLoss()
+        self.ALA = ALA(self.loss, train_set, self.batchsize, 2, 1.0, device)
 
     # get incremental train data
     def beforeTrain(self, task_id_new, group):
@@ -112,6 +117,9 @@ class GLFC_model:
 
         return train_loader
 
+    def local_initialization(self, old_model):
+        self.ALA.adaptive_local_aggregation(old_model, self.model)
+
     # train model
     def train(self, ep_g, model_old):
         self.model = model_to_device(self.model, False, self.device)
@@ -127,10 +135,16 @@ class GLFC_model:
             if self.signal:
                 self.old_model = model_old[0]
 
+        logging.basicConfig(level=logging.DEBUG,
+                            format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+        logging.info("是否有老模型：" + str(self.old_model != None))
+
         if self.old_model != None:
             print('load old model')
             self.old_model = model_to_device(self.old_model, False, self.device)
             self.old_model.eval()
+
+            self.local_initialization(self.old_model)
 
         for epoch in range(self.epochs):
             loss_cur_sum, loss_mmd_sum = [], []

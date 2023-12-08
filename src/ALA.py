@@ -8,11 +8,9 @@ from typing import List, Tuple
 
 class ALA:
     def __init__(self,
-                cid: int,
                 loss: nn.Module,
                 train_data: List[Tuple],
                 batch_size: int,
-                rand_percent: int,
                 layer_idx: int = 0,
                 eta: float = 1.0,
                 device: str = 'cpu',
@@ -37,11 +35,9 @@ class ALA:
             None.
         """
 
-        self.cid = cid
         self.loss = loss
         self.train_data = train_data
         self.batch_size = batch_size
-        self.rand_percent = rand_percent
         self.layer_idx = layer_idx
         self.eta = eta
         self.threshold = threshold
@@ -67,11 +63,7 @@ class ALA:
             None.
         """
 
-        # randomly sample partial local training data
-        rand_ratio = self.rand_percent / 100
-        rand_num = int(rand_ratio*len(self.train_data))
-        rand_idx = random.randint(0, len(self.train_data)-rand_num)
-        rand_loader = DataLoader(self.train_data[rand_idx:rand_idx+rand_num], self.batch_size, drop_last=True)
+
 
 
         # obtain the references of the parameters
@@ -117,7 +109,7 @@ class ALA:
         losses = []  # record losses
         cnt = 0  # weight training iteration counter
         while True:
-            for x, y in rand_loader:
+            for x, y in self.train_data:
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
@@ -148,7 +140,7 @@ class ALA:
 
             # train the weight until convergence
             if len(losses) > self.num_pre_loss and np.std(losses[-self.num_pre_loss:]) < self.threshold:
-                print('Client:', self.cid, '\tStd:', np.std(losses[-self.num_pre_loss:]),
+                print('\tStd:', np.std(losses[-self.num_pre_loss:]),
                     '\tALA epochs:', cnt)
                 break
 
