@@ -116,8 +116,6 @@ class GLFC_model:
 
         return train_loader
 
-    def local_initialization(self, old_model):
-        self.ALA.adaptive_local_aggregation(old_model, self.model)
 
     # train model
     def train(self, ep_g, model_old, modle_g):
@@ -139,7 +137,9 @@ class GLFC_model:
                             format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
         logging.info("是否有老模型：" + str(self.old_model != None))
         print("是否有老模型：" + str(self.old_model != None))
-        adp.adaptive_local_aggregation(modle_g)
+
+        adp.adaptive_local_aggregation(modle_g, self.model)
+
         if self.old_model != None:
             print('load old model')
             self.old_model = model_to_device(self.old_model, False, self.device)
