@@ -138,7 +138,9 @@ class GLFC_model:
         logging.info("是否有老模型：" + str(self.old_model != None))
         print("是否有老模型：" + str(self.old_model != None))
 
-        adp.adaptive_local_aggregation(modle_g, self.model)
+        if self.isTrain:
+            print("自适应聚合")
+            adp.adaptive_local_aggregation(modle_g, self.model)
 
         if self.old_model != None:
             print('load old model')
