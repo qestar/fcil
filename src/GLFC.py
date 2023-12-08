@@ -138,6 +138,7 @@ class GLFC_model:
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
         logging.info("是否有老模型：" + str(self.old_model != None))
+        print("是否有老模型：" + str(self.old_model != None))
 
         if self.old_model != None:
             print('load old model')
