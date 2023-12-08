@@ -50,7 +50,7 @@ def local_train(clients, index, model_g, task_id, model_old, ep_g, old_client):
 
     clients[index].update_new_set()
     print(clients[index].signal)
-    clients[index].train(ep_g, model_old)
+    clients[index].train(ep_g, model_old, model_g)
     local_model = clients[index].model.state_dict()
     proto_grad = clients[index].proto_grad_sharing()
 
