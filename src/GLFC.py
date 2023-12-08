@@ -14,7 +14,7 @@ from iCIFAR100 import iCIFAR100
 from torch.utils.data import DataLoader
 import random
 from Fed_utils import *
-from src.ALA import ALA
+from ALA import ALA
 
 
 def get_one_hot(target, num_class, device):
