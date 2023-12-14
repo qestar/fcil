@@ -51,7 +51,7 @@ def main():
     encode_model = LeNet(num_classes=100)
     encode_model.apply(weights_init)
 
-    for i in range(125):
+    for i in range(60):
         model_temp = GLFC_model(args.numclass, feature_extractor, args.batch_size, args.task_size, args.memory_size,
                      args.epochs_local, args.learning_rate, train_dataset, args.device, encode_model)
         models.append(model_temp)
