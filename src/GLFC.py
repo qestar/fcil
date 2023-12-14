@@ -142,6 +142,7 @@ class GLFC_model:
             print("自适应聚合")
             adp.adaptive_local_aggregation(modle_g, self.model)
 
+
         if self.old_model != None:
             print('load old model')
             self.old_model = model_to_device(self.old_model, False, self.device)
