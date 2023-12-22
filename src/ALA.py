@@ -109,7 +109,9 @@ class ALA:
         losses = []  # record losses
         cnt = 0  # weight training iteration counter
         while True:
-            for x, y in zip(self.train_data[0], self.train_data[1]):
+            for data in self.train_data:
+                x = data[0]
+                y = data[1]
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
