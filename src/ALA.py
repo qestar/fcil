@@ -63,9 +63,6 @@ class ALA:
             None.
         """
 
-
-
-
         # obtain the references of the parameters
         params_g = list(global_model.parameters())
         params = list(local_model.parameters())
@@ -110,8 +107,8 @@ class ALA:
         cnt = 0  # weight training iteration counter
         while True:
             for data in self.train_data:
-                x = data[0]
-                y = data[1]
+                x = data[1]
+                y = data[0]
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
