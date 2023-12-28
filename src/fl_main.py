@@ -103,9 +103,12 @@ def main():
         clients_index = random.sample(range(num_clients), args.local_clients)
         print('select part of clients to conduct local training')
 
+        ts = args.task_size
+        d = args.device
+
         # 每个用户进行训练
         for c in clients_index:
-            local_model, proto_grad = local_train(models, c, model_g, task_id, model_old, ep_g, old_client_0)
+            local_model, proto_grad = local_train(models, c, model_g, task_id, model_old, ep_g, old_client_0, old_task_id, classes_learned, ts, d)
             w_local.append(local_model)
             if proto_grad != None:
                 for grad_i in proto_grad:

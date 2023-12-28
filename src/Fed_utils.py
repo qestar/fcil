@@ -37,8 +37,9 @@ def participant_exemplar_storing(clients, num, model_g, old_client, task_id, cli
                 clients[index].beforeTrain(task_id, 1)
             clients[index].update_new_set()
 
-def local_train(clients, index, model_g, task_id, model_old, ep_g, old_client):
+def local_train(clients, index, model_g, task_id, model_old, ep_g, old_client, old_task_id, classes_learned, t, d):
     print("==================" + str(clients[index].isTrain))
+    # 没训练过，复制全局模型
     if not clients[index].isTrain:
         clients[index].model = copy.deepcopy(model_g)
 
@@ -47,6 +48,12 @@ def local_train(clients, index, model_g, task_id, model_old, ep_g, old_client):
         clients[index].beforeTrain(task_id, 0)
     else:
         clients[index].beforeTrain(task_id, 1)
+
+    # 训练过，增量
+    if task_id != old_task_id and old_task_id != -1:
+        classes_learned += t
+        clients[index].model.Incremental_learning(classes_learned)
+        clients[index].model = model_to_device(clients[index].model, False, d)
 
     clients[index].update_new_set()
     print(clients[index].signal)
