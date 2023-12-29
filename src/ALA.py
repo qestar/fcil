@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -5,6 +7,8 @@ import copy
 import random
 from torch.utils.data import DataLoader
 from typing import List, Tuple
+logging.basicConfig(level=logging.DEBUG,
+                                    format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
 
 class ALA:
     def __init__(self,
@@ -67,9 +71,9 @@ class ALA:
         params_g = list(global_model.parameters())
         params = list(local_model.parameters())
 
-        # deactivate ALA at the 1st communication iteration
-        if torch.sum(params_g[0] - params[0]) == 0:
-            return
+        # deactivate ALA at the 1st communication iteration 第一轮不进行ALA
+        # if torch.sum(params_g[0] - params[0]) == 0:
+        #     return
 
         # preserve all the updates in the lower layers
         for param, param_g in zip(params[:-self.layer_idx], params_g[:-self.layer_idx]):
