@@ -66,14 +66,18 @@ class ALA:
         Returns:
             None.
         """
-
+        logging.basicConfig(level=logging.DEBUG,
+                            format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
         # obtain the references of the parameters
         params_g = list(global_model.parameters())
         params = list(local_model.parameters())
 
-        # deactivate ALA at the 1st communication iteration 第一轮不进行ALA
-        # if torch.sum(params_g[0] - params[0]) == 0:
-        #     return
+        #  第一轮不进行ALA
+        # deactivate ALA at the 1st communication iteration
+        if torch.sum(params_g[0] - params[0]) == 0:
+            return
+        else:
+            logging.info("自适应聚合")
 
         # preserve all the updates in the lower layers
         for param, param_g in zip(params[:-self.layer_idx], params_g[:-self.layer_idx]):
@@ -112,14 +116,15 @@ class ALA:
         while True:
             for data in self.train_data:
                 x = data[1]
-                y = data[0]
+                y = data[2]
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
                     x = x.to(self.device)
-                y = y.to(self.device)
+                y = y.long().to(self.device)
                 optimizer.zero_grad()
                 output = model_t(x)
+
                 loss_value = self.loss(output, y) # modify according to the local objective
                 loss_value.backward()
 

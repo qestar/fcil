@@ -51,6 +51,7 @@ def main():
     encode_model = LeNet(num_classes=100)
     encode_model.apply(weights_init)
 
+    # numclass: 第一个任务客户端数量 task_size: 每个任务包含的类
     for i in range(125):
         model_temp = GLFC_model(args.numclass, feature_extractor, args.batch_size, args.task_size, args.memory_size,
                      args.epochs_local, args.learning_rate, train_dataset, args.device, encode_model)
@@ -71,12 +72,15 @@ def main():
     out_file.write(log_str + '\n')
     out_file.flush()
 
+    #args.task_size：每个任务包含的数据种类
     classes_learned = args.task_size
     old_task_id = -1
     for ep_g in range(args.epochs_global):
         pool_grad = []
+        # 从服务器取回最优模型
         model_old = proxy_server.model_back()
-        # 每10轮开始新的任务
+
+        # 每10轮开始新的任务 args.tasks_global：任务总数
         task_id = ep_g // args.tasks_global
 
         if task_id != old_task_id and old_task_id != -1:
@@ -91,6 +95,7 @@ def main():
             num_clients = len(new_client) + len(old_client_1) + len(old_client_0)
             print(old_client_0)
 
+        # 增量， 类别增多，改变网络输出特征数，即classes_learned
         if task_id != old_task_id and old_task_id != -1:
             classes_learned += args.task_size
             model_g.Incremental_learning(classes_learned)
@@ -103,6 +108,7 @@ def main():
         clients_index = random.sample(range(num_clients), args.local_clients)
         print('select part of clients to conduct local training')
 
+        # 后续ala参数需要
         ts = args.task_size
         d = args.device
 

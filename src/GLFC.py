@@ -136,10 +136,8 @@ class GLFC_model:
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
         logging.info("是否有老模型：" + str(self.old_model != None))
-        print("是否有老模型：" + str(self.old_model != None))
 
         if self.isTrain:
-            print("自适应聚合")
             adp.adaptive_local_aggregation(modle_g, self.model)
 
 
