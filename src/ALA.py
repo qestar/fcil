@@ -54,7 +54,8 @@ class ALA:
 
     def adaptive_local_aggregation(self,
                             global_model: nn.Module,
-                            local_model: nn.Module) -> None:
+                            local_model: nn.Module,
+                            isAla: bool) -> None:
         """
         Generates the Dataloader for the randomly sampled local training data and
         preserves the lower layers of the update.
@@ -143,7 +144,7 @@ class ALA:
             cnt += 1
 
             # only train one epoch in the subsequent iterations
-            if not self.start_phase:
+            if isAla:
                 break
 
             # train the weight until convergence
@@ -152,7 +153,7 @@ class ALA:
                     '\tALA epochs:', cnt)
                 break
 
-        self.start_phase = False
+
 
         # obtain initialized local model
         for param, param_t in zip(params_p, params_tp):

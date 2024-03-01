@@ -40,6 +40,7 @@ class GLFC_model:
         self.learning_rate = learning_rate
         self.model = network(numclass, feature_extractor)
         self.isTrain = False
+        self.isAla = False
         self.encode_model = encode_model
 
         self.exemplar_set = []
@@ -138,7 +139,8 @@ class GLFC_model:
         logging.info("是否有老模型：" + str(self.old_model != None))
 
         if self.isTrain:
-            adp.adaptive_local_aggregation(modle_g, self.model)
+            adp.adaptive_local_aggregation(modle_g, self.model, self.isAla)
+            self.isAla = True
 
 
         if self.old_model != None:
