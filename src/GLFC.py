@@ -40,7 +40,7 @@ class GLFC_model:
         self.learning_rate = learning_rate
         self.model = network(numclass, feature_extractor)
         self.isTrain = False
-        self.isAla = False
+        self.isAla = 0
         self.encode_model = encode_model
 
         self.exemplar_set = []
@@ -140,7 +140,7 @@ class GLFC_model:
 
         if self.isTrain:
             adp.adaptive_local_aggregation(modle_g, self.model, self.isAla)
-            self.isAla = True
+            self.isAla = self.isAla + 1
 
 
         if self.old_model != None:
