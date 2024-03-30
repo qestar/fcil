@@ -127,14 +127,17 @@ def main():
 
         print('federated aggregation...')
         w_g_new = FedAvg(w_local)
+        print("1")
         w_g_last = copy.deepcopy(model_g.state_dict())
-
+        print("2")
         model_g.load_state_dict(w_g_new)
-
-        proxy_server.model = copy.deepcopy(model_g)
-        proxy_server.dataloader(pool_grad)
-
+        print("3")
+        # proxy_server.model = copy.deepcopy(model_g)
+        # print("4")
+        # proxy_server.dataloader(pool_grad)
+        print("5")
         acc_global = model_global_eval(model_g, test_dataset, task_id, args.task_size, args.device)
+        print("6")
         log_str = 'Task: {}, Round: {} Accuracy = {:.2f}%'.format(task_id, ep_g, acc_global)
         out_file.write(log_str + '\n')
         out_file.flush()
