@@ -40,6 +40,7 @@ def participant_exemplar_storing(clients, num, model_g, old_client, task_id, cli
             clients[index].update_new_set()
 
 def local_train(clients, index, model_g, task_id, model_old, ep_g, old_client, old_task_id, classes_learned, t, d):
+    print(index)
     print("==================" + str(clients[index].isTrain))
     # 没训练过，复制全局模型。 训练过，后续采用ala和全局模型聚合
     if not clients[index].isTrain:

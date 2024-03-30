@@ -15,7 +15,7 @@ def args_parser():
     parser.add_argument('--memory_size', type=int, default=2000, help='size of exemplar memory')
     parser.add_argument('--epochs_local', type=int, default=20, help='local epochs of each global round')
     parser.add_argument('--learning_rate', type=float, default=2.0, help='learning rate')
-    parser.add_argument('--num_clients', type=int, default=30, help='initial number of clients')
+    parser.add_argument('--num_clients', type=int, default=10, help='initial number of clients')
     parser.add_argument('--local_clients', type=int, default=10, help='number of selected clients each round')
     parser.add_argument('--epochs_global', type=int, default=100, help='total number of global rounds')
     parser.add_argument('--tasks_global', type=int, default=10, help='total number of tasks')
