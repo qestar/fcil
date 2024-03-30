@@ -125,28 +125,28 @@ class GLFC_model:
         self.isTrain = True
         opt = optim.SGD(self.model.parameters(), lr=self.learning_rate, weight_decay=0.00001)
 
-        if model_old[1] != None:
-            if self.signal:
-                self.old_model = model_old[1]
-            else:
-                self.old_model = model_old[0]
-        else:
-            if self.signal:
-                self.old_model = model_old[0]
+        # if model_old[1] != None:
+        #     if self.signal:
+        #         self.old_model = model_old[1]
+        #     else:
+        #         self.old_model = model_old[0]
+        # else:
+        #     if self.signal:
+        #         self.old_model = model_old[0]
 
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
-        logging.info("是否有老模型：" + str(self.old_model != None))
+        # logging.info("是否有老模型：" + str(self.old_model != None))
 
-        if self.isTrain:
-            adp.adaptive_local_aggregation(modle_g, self.model, self.isAla)
-            self.isAla = self.isAla + 1
+        # if self.isTrain:
+        #     adp.adaptive_local_aggregation(modle_g, self.model, self.isAla)
+        #     self.isAla = self.isAla + 1
 
 
-        if self.old_model != None:
-            print('load old model')
-            self.old_model = model_to_device(self.old_model, False, self.device)
-            self.old_model.eval()
+        # if self.old_model != None:
+        #     print('load old model')
+        #     self.old_model = model_to_device(self.old_model, False, self.device)
+        #     self.old_model.eval()
 
         for epoch in range(self.epochs):
             loss_cur_sum, loss_mmd_sum = [], []

@@ -52,7 +52,7 @@ def main():
     encode_model.apply(weights_init)
 
     # numclass: 第一个任务客户端数量 task_size: 每个任务包含的类
-    for i in range(125):
+    for i in range(10):
         model_temp = GLFC_model(args.numclass, feature_extractor, args.batch_size, args.task_size, args.memory_size,
                      args.epochs_local, args.learning_rate, train_dataset, args.device, encode_model)
         models.append(model_temp)
@@ -78,22 +78,22 @@ def main():
     for ep_g in range(args.epochs_global):
         pool_grad = []
         # 从服务器取回最优模型
-        model_old = proxy_server.model_back()
+        model_old = model_g
 
         # 每10轮开始新的任务 args.tasks_global：任务总数
         task_id = ep_g // args.tasks_global
 
-        if task_id != old_task_id and old_task_id != -1:
-            # 每轮增加新的1个用户
-            overall_client = len(old_client_0) + len(old_client_1) + len(new_client)
-            new_client = [i for i in range(overall_client, overall_client + args.task_size)]
-            # 两种旧用户比例9：1
-            old_client_1 = random.sample([i for i in range(overall_client)], int(overall_client * 0.9))
-            # old_client_0 : 不接受新数据 保存旧数据
-            old_client_0 = [i for i in range(overall_client) if i not in old_client_1]
-            # 更新总的用户数量，初始为30个
-            num_clients = len(new_client) + len(old_client_1) + len(old_client_0)
-            print(old_client_0)
+        # if task_id != old_task_id and old_task_id != -1:
+        #     # 每轮增加新的10个用户
+        #     overall_client = len(old_client_0) + len(old_client_1) + len(new_client)
+        #     new_client = [i for i in range(overall_client, overall_client + args.task_size)]
+        #     # 两种旧用户比例9：1
+        #     old_client_1 = random.sample([i for i in range(overall_client)], int(overall_client * 0.9))
+        #     # old_client_0 : 不接受新数据 保存旧数据
+        #     old_client_0 = [i for i in range(overall_client) if i not in old_client_1]
+        #     # 更新总的用户数量，初始为30个
+        #     num_clients = len(new_client) + len(old_client_1) + len(old_client_0)
+        #     print(old_client_0)
 
         # 增量， 类别增多，改变网络输出特征数，即classes_learned
         if task_id != old_task_id and old_task_id != -1:

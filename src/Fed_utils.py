@@ -45,11 +45,11 @@ def local_train(clients, index, model_g, task_id, model_old, ep_g, old_client, o
     if not clients[index].isTrain:
         clients[index].model = copy.deepcopy(model_g)
 
-    # 用户为不接受新数据
-    if index in old_client:
-        clients[index].beforeTrain(task_id, 0)
-    else:
-        clients[index].beforeTrain(task_id, 1)
+    # # 用户为不接受新数据
+    # if index in old_client:
+    #     clients[index].beforeTrain(task_id, 0)
+    # else:
+    clients[index].beforeTrain(task_id, 1)
 
     # # 训练过，增量
     # if task_id != old_task_id and old_task_id != -1:
